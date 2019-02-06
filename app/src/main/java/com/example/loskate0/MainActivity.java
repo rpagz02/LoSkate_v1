@@ -9,13 +9,16 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApi;
 import com.google.android.gms.location.LocationListener;
 
 
@@ -31,12 +34,16 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity implements
         OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
 
+    // Start of Google Map and Fragment Stuff
     SupportMapFragment supportMapFragment;
     private GoogleMap mMap;
     private GoogleApiClient googleApiClient;
@@ -44,6 +51,9 @@ public class MainActivity extends AppCompatActivity implements
     private Location lastLocation;
     private Marker currentUserLocationMarker;
     private static final int Request_User_Location_Code = 99;
+    // End of Google Map and Fragment Stuff
+
+
 
 
     @Override
@@ -62,13 +72,12 @@ public class MainActivity extends AppCompatActivity implements
         //getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new Dashboard_Fragment()).commit();
 
 
+        // This Checks for permissions
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
             checkUserLocationPermission();
 
-
         supportMapFragment.getMapAsync(this);
         ///////////////////////////////////////////////////////////////////////////
-
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -77,25 +86,23 @@ public class MainActivity extends AppCompatActivity implements
             if (supportMapFragment.isAdded())
                 getSupportFragmentManager().beginTransaction().hide(supportMapFragment).commit();
 
-            switch (item.getItemId()) {
-
+            switch (item.getItemId())
+            {
                 case R.id.navigation_home:
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Home_Fragment()).commit();
                     break;
-                case R.id.navigation_map: {
-                    //getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new Map_Fragment()).commit();
+                case R.id.navigation_map:
+                    {
                     if (!supportMapFragment.isAdded())
                         getSupportFragmentManager().beginTransaction().add(R.id.map_container, supportMapFragment).commit();
                     else
                         getSupportFragmentManager().beginTransaction().show(supportMapFragment).commit();
                     break;
-                }
+                    }
                 case R.id.navigation_dashboard:
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Dashboard_Fragment()).commit();
                     break;
             }
-
-
             return true;
         }
     };
@@ -211,6 +218,7 @@ public class MainActivity extends AppCompatActivity implements
                     }
                     mMap.setMyLocationEnabled(true);
                 }
+
                 else
                 {
                     Toast.makeText(this,"Permission Denied...", Toast.LENGTH_SHORT).show();
@@ -220,6 +228,17 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
+    // home page method
+    public void fl(String s)
+    {
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction ft = manager.beginTransaction();
+        home_listExpanded hlf = new home_listExpanded();
+        Bundle b2 = new Bundle();
+        b2.putString("s", s);
+        hlf.setArguments(b2);
+        ft.replace(R.id.fragment_container, hlf);
+        ft.commit();
 
-
+    }
 }
