@@ -27,7 +27,7 @@ public class home_listExpanded extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_home_list_expanded, container, false);
-        textView = v.findViewById(R.id.text1);
+        textView = v.findViewById(R.id.listText);
         Bundle b = getArguments();
         if(b != null)
         {

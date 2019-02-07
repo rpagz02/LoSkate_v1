@@ -14,8 +14,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -34,8 +32,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements
         OnMapReadyCallback,
@@ -67,7 +63,8 @@ public class MainActivity extends AppCompatActivity implements
         navigation.setOnNavigationItemSelectedListener(navListener);
 
         //This starts our MAP fragment from the start of our app
-        getSupportFragmentManager().beginTransaction().replace(R.id.map_container, supportMapFragment).commit();
+        //getSupportFragmentManager().beginTransaction().replace(R.id.map_container, supportMapFragment).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Map_Fragment()).commit();
         //This starts our DASHBOARD fragment from the start of our app (in case the map one doesn't work atm)
         //getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new Dashboard_Fragment()).commit();
 
@@ -93,10 +90,12 @@ public class MainActivity extends AppCompatActivity implements
                     break;
                 case R.id.navigation_map:
                     {
-                    if (!supportMapFragment.isAdded())
-                        getSupportFragmentManager().beginTransaction().add(R.id.map_container, supportMapFragment).commit();
-                    else
-                        getSupportFragmentManager().beginTransaction().show(supportMapFragment).commit();
+                        // This is testing a map fragment
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Map_Fragment()).commit();
+//                    if (!supportMapFragment.isAdded())
+//                        getSupportFragmentManager().beginTransaction().add(R.id.map_container, supportMapFragment).commit();
+//                    else
+//                        getSupportFragmentManager().beginTransaction().show(supportMapFragment).commit();
                     break;
                     }
                 case R.id.navigation_dashboard:
@@ -110,9 +109,6 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-//        LatLng marker = new LatLng(28.604940,-81.286910);
-//        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(marker, 13));
-//        googleMap.addMarker(new MarkerOptions().position(marker).title("Richs House"));
 
         mMap = googleMap;
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
@@ -239,6 +235,5 @@ public class MainActivity extends AppCompatActivity implements
         hlf.setArguments(b2);
         ft.replace(R.id.fragment_container, hlf);
         ft.commit();
-
     }
 }
