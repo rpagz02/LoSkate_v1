@@ -41,7 +41,6 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback {
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        Toast.makeText(this.getContext(), "Drop A Spot!", Toast.LENGTH_SHORT).show();
         gMap = googleMap;
         if (mLocationPermissionGranted) {
             GetDeviceLocation();
@@ -58,8 +57,7 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         GetLocationPermission();
-
-
+        Toast.makeText(this.getContext(), "Drop A Spot!", Toast.LENGTH_SHORT).show();
     }
 
     // Inflate the fragment here
@@ -154,7 +152,7 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void MoveMapCamera(LatLng latLng, float zoom) {
-        Toast.makeText(Map_Fragment.this.getContext(), "Peepin Your Location", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(Map_Fragment.this.getContext(), "Peepin Your Location", Toast.LENGTH_SHORT).show();
         gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
     }
 
