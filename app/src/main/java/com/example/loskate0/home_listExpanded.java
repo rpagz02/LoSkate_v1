@@ -12,15 +12,13 @@ import android.widget.TextView;
 import org.w3c.dom.Text;
 
 
-/**
- * A simple {@link Fragment} subclass.
- */
+
 public class home_listExpanded extends Fragment {
 
     TextView textView;
 
-    public home_listExpanded() {
-        // Required empty public constructor
+    public home_listExpanded()
+    {
     }
 
 

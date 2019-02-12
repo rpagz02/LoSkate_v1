@@ -21,19 +21,15 @@ import java.util.ArrayList;
 public class Home_Fragment extends Fragment
 {
 
-    // Variables Declarations for the list and string array
    ListView lv;
    ArrayList<String> al;
    ArrayAdapter<String> aa;
-
-
 
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
         View v = inflater.inflate(R.layout.fragment_home,container, false);
-        // initliaze the declared variables
         lv = v.findViewById(R.id.listview1);
         al = new ArrayList<>();
         aa = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, al)
