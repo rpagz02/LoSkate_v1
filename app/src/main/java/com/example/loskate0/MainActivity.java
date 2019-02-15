@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
         //This starts app with MAP FRAGMENT
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Map_Fragment()).commit();
         // This starts app with DASHBOARD FRAGMENT
-        /*getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new Dashboard_Fragment()).commit();*/
+        //getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new Dashboard_Fragment()).commit();
 
     }
 

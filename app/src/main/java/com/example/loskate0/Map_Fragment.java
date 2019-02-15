@@ -24,6 +24,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class Map_Fragment extends Fragment implements OnMapReadyCallback
 {
@@ -39,8 +41,26 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback
     private FusedLocationProviderClient mFusedLocationProviderClient;
     ////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////
+    // *TESTING*  Database Variables                                                              //
+    private FirebaseDatabase database;
+    private DatabaseReference myRef;
 
 
+
+    // Check our Permissions in this method
+    @Override
+    public void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        GetLocationPermission();
+        Toast.makeText(this.getContext(), "Drop A Spot!", Toast.LENGTH_SHORT).show();
+        // Database stuff
+        database = FirebaseDatabase.getInstance();
+        myRef = database.getReference("message");
+        myRef.setValue("Hello World");
+    }
+
+    // Method called every time the map is ready
     @Override
     public void onMapReady(GoogleMap googleMap)
     {
@@ -56,14 +76,6 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback
         }
     }
 
-    // Check our Permissions in this method
-    @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-        GetLocationPermission();
-        Toast.makeText(this.getContext(), "Drop A Spot!", Toast.LENGTH_SHORT).show();
-    }
 
     // Inflate the fragment here
     @Override
