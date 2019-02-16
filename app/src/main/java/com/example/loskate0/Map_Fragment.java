@@ -24,8 +24,13 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.Random;
 
 public class Map_Fragment extends Fragment implements OnMapReadyCallback
 {
@@ -44,6 +49,8 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback
     // *TESTING*  Database Variables                                                              //
     private FirebaseDatabase database;
     private DatabaseReference myRef;
+    private DatabaseReference mDatabase;
+
 
 
 
@@ -54,11 +61,8 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         GetLocationPermission();
         Toast.makeText(this.getContext(), "Drop A Spot!", Toast.LENGTH_SHORT).show();
-        // Database stuff
-        database = FirebaseDatabase.getInstance();
-        myRef = database.getReference("message");
-        myRef.setValue("Hello World");
     }
+
 
     // Method called every time the map is ready
     @Override
@@ -74,6 +78,7 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback
             gMap.getUiSettings().setCompassEnabled(true);
             gMap.getUiSettings().setMapToolbarEnabled(true);
         }
+        // Testing to see
     }
 
 
@@ -159,8 +164,7 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback
                         if (task.isSuccessful()) {
                             Location currentLocation = (Location) task.getResult();
 
-                            MoveMapCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), 15f);
-//                        gMap.addMarker(new MarkerOptions().position(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude())).title("Current Spot"));
+                            MoveMapCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), 18f);
 
                         } else {
                             Toast.makeText(Map_Fragment.this.getContext(), "unable to get location", Toast.LENGTH_SHORT).show();
@@ -190,11 +194,35 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback
                 {
                     Location currentLocation = (Location) task.getResult();
                     gMap.addMarker(new MarkerOptions().position(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude())).title("Current Spot"));
+                    // Store the location in the database here
+                    StoreLocationInDatabase(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()));
                 } else
                     Toast.makeText(Map_Fragment.this.getContext(), "unable to get location", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    // This method is called everytime a marker is dropped.
+    // We will store the marker location in the database
+    private void StoreLocationInDatabase(LatLng coords)
+    {
+           // database = FirebaseDatabase.getInstance();
+           // myRef = database.getReference("Spot1");
+            //
+            mDatabase = FirebaseDatabase.getInstance().getReference();
+            MarkerInfo spot = new MarkerInfo(coords,coords.hashCode());
+            String ID = Integer.toString((int)(coords.latitude * coords.longitude));
+            mDatabase.child("Spots").child(ID).setValue(spot);
+            //myRef.setValue(coords);
+    }
+
+    // This method is called when the map is ready
+    // It loops through the database and maps the markers accordingly
+    private void DisplaySavedMarkers()
+    {
 
     }
+
+    // DATABASE METHODS
 
 }
