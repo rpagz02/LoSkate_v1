@@ -30,6 +30,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.nio.charset.Charset;
 import java.util.Random;
 
 public class Map_Fragment extends Fragment implements OnMapReadyCallback
@@ -206,14 +207,10 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback
     // We will store the marker location in the database
     private void StoreLocationInDatabase(LatLng coords)
     {
-           // database = FirebaseDatabase.getInstance();
-           // myRef = database.getReference("Spot1");
-            //
             mDatabase = FirebaseDatabase.getInstance().getReference();
             MarkerInfo spot = new MarkerInfo(coords,coords.hashCode());
-            String ID = Integer.toString((int)(coords.latitude * coords.longitude));
+            String ID = getSaltString();
             mDatabase.child("Spots").child(ID).setValue(spot);
-            //myRef.setValue(coords);
     }
 
     // This method is called when the map is ready
@@ -223,6 +220,18 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback
 
     }
 
+    private String getSaltString() {
+        String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+        StringBuilder salt = new StringBuilder();
+        Random rnd = new Random();
+        while (salt.length() < 8) { // length of the random string.
+            int index = (int) (rnd.nextFloat() * SALTCHARS.length());
+            salt.append(SALTCHARS.charAt(index));
+        }
+        String saltStr = salt.toString();
+        return saltStr;
+
+    }
     // DATABASE METHODS
 
 }
