@@ -1,24 +1,39 @@
 package com.example.loskate0;
 
-import com.google.android.gms.maps.model.LatLng;
-
 public class MarkerInfo
 {
-    private LatLng coords;
+private String Latitude;
+private String Longitude;
 
-
-    public MarkerInfo(LatLng _coords)
-    {
-        this.coords = _coords;
-    }
-    public MarkerInfo() {
+    public MarkerInfo(String latitude, String longitude) {
+        Latitude = latitude;
+        Longitude = longitude;
     }
 
-    public LatLng getCoords() {
-        return this.coords;
+    public MarkerInfo(){
     }
 
-    public void setCoords(LatLng coords) {
-        this.coords = coords;
+    public String getLatitude() {
+        return Latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        Latitude = latitude;
+    }
+
+    public String getLongitude() {
+        return Longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        Longitude = longitude;
+    }
+
+    @Override
+    public String toString() {
+        return "MarkerInfo{" +
+                "Latitude='" + Latitude + '\'' +
+                ", Longitude='" + Longitude + '\'' +
+                '}';
     }
 }

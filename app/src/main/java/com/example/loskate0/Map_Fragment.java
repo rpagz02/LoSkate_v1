@@ -3,11 +3,13 @@ package com.example.loskate0;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +26,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 
 import java.util.Random;
@@ -43,10 +51,12 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback
     ////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // *TESTING*  Database Variables                                                              //
-//    private FirebaseDatabase database;
-//    private DatabaseReference myRef;
-//    private DatabaseReference mDatabase;
+    private FirebaseDatabase database;
+    private DatabaseReference myRef;
+    private DatabaseReference mDatabase;
     private String ID;
+    private static final String TAG = "MyActivity";
+
 
 
 
@@ -74,6 +84,10 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback
             gMap.setMyLocationEnabled(true);
             gMap.getUiSettings().setCompassEnabled(true);
             gMap.getUiSettings().setMapToolbarEnabled(true);
+           // DB t1
+            GetDatabaseContent();
+
+
 
             /*  --------------------------------------------------------------------------------------  */
             // TESTING RETREIVING DATABASE OBJ LOCATIONS HERE
@@ -220,7 +234,7 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback
                     Location currentLocation = (Location) task.getResult();
                     gMap.addMarker(new MarkerOptions().position(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude())).title("Current Spot"));
                     // Store the location in the database here
-                    //StoreLocationInDatabase(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()));
+                    StoreLocationInDatabase(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()));
                 } else
                     Toast.makeText(Map_Fragment.this.getContext(), "unable to get location", Toast.LENGTH_SHORT).show();
             }
@@ -229,13 +243,13 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback
 
     // This method is called everytime a marker is dropped.
     // We will store the marker location in the database
-//    private void StoreLocationInDatabase(LatLng coords)
-//    {
-//            mDatabase = FirebaseDatabase.getInstance().getReference();
-//            MarkerInfo spot = new MarkerInfo(coords);
-//            ID = RandomStringGenerator();
-//            mDatabase.child(ID).setValue(spot);
-//    }
+    private void StoreLocationInDatabase(LatLng coords)
+    {
+            mDatabase = FirebaseDatabase.getInstance().getReference();
+            MarkerInfo spot = new MarkerInfo(Double.toString(coords.latitude), Double.toString(coords.longitude));
+            ID = RandomStringGenerator();
+            mDatabase.child("spots").child(ID).setValue(spot);
+    }
 
     // This method is called when the map is ready
     // It loops through the database and maps the markers accordingly
@@ -262,6 +276,27 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback
 //                    }
 //        });
 //    }
+
+
+    private void GetDatabaseContent()
+    {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+
+        Query query1 = reference.child("spots").orderByKey();
+
+        query1.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
+                MarkerInfo mI = singleSnapshot.getValue(MarkerInfo.class);
+Log.d(TAG,"onDataChange: Query Method 1) found spot: " + mI.toString());
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+    }
 
     private String RandomStringGenerator() {
         String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
