@@ -67,14 +67,13 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback
     {
         super.onCreate(savedInstanceState);
         GetLocationPermission();
-        Toast.makeText(this.getContext(), "Drop A Spot!", Toast.LENGTH_SHORT).show();
     }
-
 
     // Method called every time the map is ready
     @Override
     public void onMapReady(GoogleMap googleMap)
     {
+        Toast.makeText(this.getContext(), "Drop A Spot!", Toast.LENGTH_SHORT).show();
         gMap = googleMap;
         if (mLocationPermissionGranted)
         {
@@ -84,42 +83,10 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback
             gMap.setMyLocationEnabled(true);
             gMap.getUiSettings().setCompassEnabled(true);
             gMap.getUiSettings().setMapToolbarEnabled(true);
-           // DB t1
-            GetDatabaseContent();
-
-
-
-            /*  --------------------------------------------------------------------------------------  */
-            // TESTING RETREIVING DATABASE OBJ LOCATIONS HERE
-            /*  --------------------------------------------------------------------------------------  */
-
-//            FirebaseDatabase.getInstance().getReference().child(RandomStringGenerator()).addListenerForSingleValueEvent(new ValueEventListener()
-//
-//            {
-//                @Override
-//                public void onDataChange(DataSnapshot dataSnapshot)
-//                {
-//                    for (DataSnapshot ds : dataSnapshot.getChildren())
-//                    {
-//                        //LatLng temp = new LatLng(28.587640,-81.286320);
-//                        //gMap.addMarker(new MarkerOptions().position(spot.getCoords()).title("Saved Spot"));
-//                        MarkerInfo spot = ds.getValue(MarkerInfo.class);
-//                        double lat = spot.getCoords().latitude;
-//                        double lon = spot.getCoords().longitude;
-//                        LatLng markerLocation = new LatLng(lat,lon);
-//                        gMap.addMarker(new MarkerOptions().position(markerLocation).title("Saved Spot"));
-//                        System.out.println(spot);
-//                    }
-//                }
-//                @Override
-//                public void onCancelled(DatabaseError databaseError)
-//                {
-//                }
-//            });
+           // Read from the database, and plot the spots here
+            GetDatabaseContent(gMap);
         }
-        // Testing to see
     }
-
 
     // Inflate the fragment here
     @Override
@@ -141,12 +108,14 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback
         return rootView;
     }
 
+    // Initailize the Map Fragment
     private void InitMap()
     {
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);  //use SuppoprtMapFragment for using in fragment instead of activity  MapFragment = activity   SupportMapFragment = fragment
         mapFragment.getMapAsync(this);
     }
 
+    // Gets Location Permissions
     private void GetLocationPermission()
     {
         String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
@@ -161,6 +130,7 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback
         }
     }
 
+    // Checks Permissions
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
     {
@@ -190,9 +160,9 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback
         }
     }
 
-    // LOCATION METHODS //
-
-    private void GetDeviceLocation() {
+    // Uses permisisons to get Location
+    private void GetDeviceLocation()
+    {
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this.getContext());
         try {
             if (mLocationPermissionGranted) {
@@ -215,11 +185,13 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback
         }
     }
 
-    private void MoveMapCamera(LatLng latLng, float zoom) {
-        //Toast.makeText(Map_Fragment.this.getContext(), "Peepin Your Location", Toast.LENGTH_SHORT).show();
+    // Moves the map camera to a LatLng and respective Zoom
+    private void MoveMapCamera(LatLng latLng, float zoom)
+    {
         gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
     }
 
+    // Drops a Marker and Stores Markers Location in Database
     private void DropMarker() {
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this.getContext());
         if (ActivityCompat.checkSelfPermission(this.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -241,8 +213,7 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback
         });
     }
 
-    // This method is called everytime a marker is dropped.
-    // We will store the marker location in the database
+    // Method called when marker is dropped.
     private void StoreLocationInDatabase(LatLng coords)
     {
             mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -251,54 +222,34 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback
             mDatabase.child("spots").child(ID).setValue(spot);
     }
 
-    // This method is called when the map is ready
-    // It loops through the database and maps the markers accordingly
-//    private void DisplaySavedMarkers(final GoogleMap _gmap)
-//    {
-//        FirebaseDatabase.getInstance().getReference("loskate0-copy").addValueEventListener(new ValueEventListener()
-//        {
-//                    @Override
-//                    public void onDataChange(DataSnapshot dataSnapshot)
-//                    {
-//                        for (DataSnapshot ds : dataSnapshot.getChildren())
-//                        {
-//                            MarkerInfo spot = ds.getValue(MarkerInfo.class);
-//                            LatLng temp = new LatLng(28.609240,-81.287090);
-//                            //gMap.addMarker(new MarkerOptions().position(spot.getCoords()).title("Saved Spot"));
-//                            _gmap.addMarker(new MarkerOptions().position(temp).title("Saved Spot"));
-//
-//                            System.out.println(spot);
-//                        }
-//                    }
-//                    @Override
-//                    public void onCancelled(DatabaseError databaseError)
-//                    {
-//                    }
-//        });
-//    }
-
-
-    private void GetDatabaseContent()
+    // Reads the Spot locations from the database and plots their respective locations
+    private void GetDatabaseContent(final GoogleMap map)
     {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
 
         Query query1 = reference.child("spots").orderByKey();
 
-        query1.addListenerForSingleValueEvent(new ValueEventListener() {
+        query1.addListenerForSingleValueEvent(new ValueEventListener()
+        {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
-                MarkerInfo mI = singleSnapshot.getValue(MarkerInfo.class);
-Log.d(TAG,"onDataChange: Query Method 1) found spot: " + mI.toString());
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+            {
+                for(DataSnapshot singleSnapshot : dataSnapshot.getChildren())
+                {
+                    MarkerInfo mI = singleSnapshot.getValue(MarkerInfo.class);
+                    LatLng spotPos = new LatLng(Double.parseDouble(mI.getLatitude()),Double.parseDouble(mI.getLongitude()));
+                    Log.d(TAG,"onDataChange: Query Method 1) found spot: " + mI.toString());
+                    map.addMarker(new MarkerOptions().position(spotPos).title("Saved Spot:  " + mI.getLatitude() + " " + mI.getLongitude()));
                 }
             }
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
+            public void onCancelled(@NonNull DatabaseError databaseError) { }
         });
     }
 
-    private String RandomStringGenerator() {
+    // Creates a random string to be used as ID
+    private String RandomStringGenerator()
+    {
         String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
         StringBuilder salt = new StringBuilder();
         Random rnd = new Random();
@@ -310,6 +261,5 @@ Log.d(TAG,"onDataChange: Query Method 1) found spot: " + mI.toString());
         return saltStr;
 
     }
-    // DATABASE METHODS
 
 }
