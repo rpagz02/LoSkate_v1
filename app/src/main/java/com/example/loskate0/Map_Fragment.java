@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,17 +21,11 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
-import java.nio.charset.Charset;
+
 import java.util.Random;
 
 public class Map_Fragment extends Fragment implements OnMapReadyCallback
@@ -50,9 +43,9 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback
     ////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // *TESTING*  Database Variables                                                              //
-    private FirebaseDatabase database;
-    private DatabaseReference myRef;
-    private DatabaseReference mDatabase;
+//    private FirebaseDatabase database;
+//    private DatabaseReference myRef;
+//    private DatabaseReference mDatabase;
     private String ID;
 
 
@@ -82,35 +75,33 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback
             gMap.getUiSettings().setCompassEnabled(true);
             gMap.getUiSettings().setMapToolbarEnabled(true);
 
-
             /*  --------------------------------------------------------------------------------------  */
             // TESTING RETREIVING DATABASE OBJ LOCATIONS HERE
             /*  --------------------------------------------------------------------------------------  */
-            //databaseReference.child("users").child(MyUtils.generateUniqueUserId(mContext)).addValueEventListener(new ValueEventListener() {
 
-            FirebaseDatabase.getInstance().getReference("loskate-a0bac").child(RandomStringGenerator()).addListenerForSingleValueEvent(new ValueEventListener()
-
-            {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot)
-                {
-                    for (DataSnapshot ds : dataSnapshot.getChildren())
-                    {
-                        //LatLng temp = new LatLng(28.587640,-81.286320);
-                        //gMap.addMarker(new MarkerOptions().position(spot.getCoords()).title("Saved Spot"));
-                        MarkerInfo spot = ds.getValue(MarkerInfo.class);
-                        double lat = spot.getCoords().latitude;
-                        double lon = spot.getCoords().longitude;
-                        LatLng markerLocation = new LatLng(lat,lon);
-                        gMap.addMarker(new MarkerOptions().position(markerLocation).title("Saved Spot"));
-                        System.out.println(spot);
-                    }
-                }
-                @Override
-                public void onCancelled(DatabaseError databaseError)
-                {
-                }
-            });
+//            FirebaseDatabase.getInstance().getReference().child(RandomStringGenerator()).addListenerForSingleValueEvent(new ValueEventListener()
+//
+//            {
+//                @Override
+//                public void onDataChange(DataSnapshot dataSnapshot)
+//                {
+//                    for (DataSnapshot ds : dataSnapshot.getChildren())
+//                    {
+//                        //LatLng temp = new LatLng(28.587640,-81.286320);
+//                        //gMap.addMarker(new MarkerOptions().position(spot.getCoords()).title("Saved Spot"));
+//                        MarkerInfo spot = ds.getValue(MarkerInfo.class);
+//                        double lat = spot.getCoords().latitude;
+//                        double lon = spot.getCoords().longitude;
+//                        LatLng markerLocation = new LatLng(lat,lon);
+//                        gMap.addMarker(new MarkerOptions().position(markerLocation).title("Saved Spot"));
+//                        System.out.println(spot);
+//                    }
+//                }
+//                @Override
+//                public void onCancelled(DatabaseError databaseError)
+//                {
+//                }
+//            });
         }
         // Testing to see
     }
@@ -229,7 +220,7 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback
                     Location currentLocation = (Location) task.getResult();
                     gMap.addMarker(new MarkerOptions().position(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude())).title("Current Spot"));
                     // Store the location in the database here
-                    StoreLocationInDatabase(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()));
+                    //StoreLocationInDatabase(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()));
                 } else
                     Toast.makeText(Map_Fragment.this.getContext(), "unable to get location", Toast.LENGTH_SHORT).show();
             }
@@ -238,39 +229,39 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback
 
     // This method is called everytime a marker is dropped.
     // We will store the marker location in the database
-    private void StoreLocationInDatabase(LatLng coords)
-    {
-            mDatabase = FirebaseDatabase.getInstance().getReference();
-            MarkerInfo spot = new MarkerInfo(coords);
-            ID = RandomStringGenerator();
-            mDatabase.child(ID).setValue(spot);
-    }
+//    private void StoreLocationInDatabase(LatLng coords)
+//    {
+//            mDatabase = FirebaseDatabase.getInstance().getReference();
+//            MarkerInfo spot = new MarkerInfo(coords);
+//            ID = RandomStringGenerator();
+//            mDatabase.child(ID).setValue(spot);
+//    }
 
     // This method is called when the map is ready
     // It loops through the database and maps the markers accordingly
-    private void DisplaySavedMarkers(final GoogleMap _gmap)
-    {
-        FirebaseDatabase.getInstance().getReference("loskate-a0bac").addValueEventListener(new ValueEventListener()
-        {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot)
-                    {
-                        for (DataSnapshot ds : dataSnapshot.getChildren())
-                        {
-                            MarkerInfo spot = ds.getValue(MarkerInfo.class);
-                            LatLng temp = new LatLng(28.609240,-81.287090);
-                            //gMap.addMarker(new MarkerOptions().position(spot.getCoords()).title("Saved Spot"));
-                            _gmap.addMarker(new MarkerOptions().position(temp).title("Saved Spot"));
-
-                            System.out.println(spot);
-                        }
-                    }
-                    @Override
-                    public void onCancelled(DatabaseError databaseError)
-                    {
-                    }
-        });
-    }
+//    private void DisplaySavedMarkers(final GoogleMap _gmap)
+//    {
+//        FirebaseDatabase.getInstance().getReference("loskate0-copy").addValueEventListener(new ValueEventListener()
+//        {
+//                    @Override
+//                    public void onDataChange(DataSnapshot dataSnapshot)
+//                    {
+//                        for (DataSnapshot ds : dataSnapshot.getChildren())
+//                        {
+//                            MarkerInfo spot = ds.getValue(MarkerInfo.class);
+//                            LatLng temp = new LatLng(28.609240,-81.287090);
+//                            //gMap.addMarker(new MarkerOptions().position(spot.getCoords()).title("Saved Spot"));
+//                            _gmap.addMarker(new MarkerOptions().position(temp).title("Saved Spot"));
+//
+//                            System.out.println(spot);
+//                        }
+//                    }
+//                    @Override
+//                    public void onCancelled(DatabaseError databaseError)
+//                    {
+//                    }
+//        });
+//    }
 
     private String RandomStringGenerator() {
         String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";

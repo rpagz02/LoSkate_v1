@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "1022421646750",
+    "firebase_url": "https://tryagain-aee0e.firebaseio.com",
+    "project_id": "tryagain-aee0e",
+    "storage_bucket": "tryagain-aee0e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1022421646750:android:175c0b88a43e8498",
+        "android_client_info": {
+          "package_name": "com.example.loskate0"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1022421646750-vp95m7nnkuumpdo785f8an722gp7g7ok.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCpergWJzAiM2p-6Jcu2wu8iAL0xoVh-Ww"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
