@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -41,7 +43,7 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback
     ////////////////////////////////////////////////////////////////////////////////////////////////
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
-    GoogleMap gMap;
+    private  GoogleMap gMap;
     private boolean mLocationPermissionGranted = false;
     private static final int mLocationCode = 1234;
     private FusedLocationProviderClient mFusedLocationProviderClient;
@@ -51,6 +53,7 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback
     private FirebaseDatabase database;
     private DatabaseReference myRef;
     private DatabaseReference mDatabase;
+    private String ID;
 
 
 
@@ -78,6 +81,36 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback
             gMap.setMyLocationEnabled(true);
             gMap.getUiSettings().setCompassEnabled(true);
             gMap.getUiSettings().setMapToolbarEnabled(true);
+
+
+            /*  --------------------------------------------------------------------------------------  */
+            // TESTING RETREIVING DATABASE OBJ LOCATIONS HERE
+            /*  --------------------------------------------------------------------------------------  */
+            //databaseReference.child("users").child(MyUtils.generateUniqueUserId(mContext)).addValueEventListener(new ValueEventListener() {
+
+            FirebaseDatabase.getInstance().getReference("loskate-a0bac").child(RandomStringGenerator()).addListenerForSingleValueEvent(new ValueEventListener()
+
+            {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot)
+                {
+                    for (DataSnapshot ds : dataSnapshot.getChildren())
+                    {
+                        //LatLng temp = new LatLng(28.587640,-81.286320);
+                        //gMap.addMarker(new MarkerOptions().position(spot.getCoords()).title("Saved Spot"));
+                        MarkerInfo spot = ds.getValue(MarkerInfo.class);
+                        double lat = spot.getCoords().latitude;
+                        double lon = spot.getCoords().longitude;
+                        LatLng markerLocation = new LatLng(lat,lon);
+                        gMap.addMarker(new MarkerOptions().position(markerLocation).title("Saved Spot"));
+                        System.out.println(spot);
+                    }
+                }
+                @Override
+                public void onCancelled(DatabaseError databaseError)
+                {
+                }
+            });
         }
         // Testing to see
     }
@@ -208,19 +241,38 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback
     private void StoreLocationInDatabase(LatLng coords)
     {
             mDatabase = FirebaseDatabase.getInstance().getReference();
-            MarkerInfo spot = new MarkerInfo(coords,coords.hashCode());
-            String ID = getSaltString();
-            mDatabase.child("Spots").child(ID).setValue(spot);
+            MarkerInfo spot = new MarkerInfo(coords);
+            ID = RandomStringGenerator();
+            mDatabase.child(ID).setValue(spot);
     }
 
     // This method is called when the map is ready
     // It loops through the database and maps the markers accordingly
-    private void DisplaySavedMarkers()
+    private void DisplaySavedMarkers(final GoogleMap _gmap)
     {
+        FirebaseDatabase.getInstance().getReference("loskate-a0bac").addValueEventListener(new ValueEventListener()
+        {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot)
+                    {
+                        for (DataSnapshot ds : dataSnapshot.getChildren())
+                        {
+                            MarkerInfo spot = ds.getValue(MarkerInfo.class);
+                            LatLng temp = new LatLng(28.609240,-81.287090);
+                            //gMap.addMarker(new MarkerOptions().position(spot.getCoords()).title("Saved Spot"));
+                            _gmap.addMarker(new MarkerOptions().position(temp).title("Saved Spot"));
 
+                            System.out.println(spot);
+                        }
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError)
+                    {
+                    }
+        });
     }
 
-    private String getSaltString() {
+    private String RandomStringGenerator() {
         String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
         StringBuilder salt = new StringBuilder();
         Random rnd = new Random();
