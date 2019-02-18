@@ -20,13 +20,12 @@
             android:id="@+id/MapMarkerButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center_horizontal"
+            android:layout_gravity="bottom|left"
             android:layout_marginBottom="10dp"
-            android:background="@color/colorPrimary"
+            android:background="@mipmap/addmarkerforeground"
             android:padding="10dp"
             android:paddingRight="0dp"
             android:paddingBottom="0dp"
-            android:text="Drop Pin"
             android:textAllCaps="false"
             android:textColor="@android:color/white" />
 

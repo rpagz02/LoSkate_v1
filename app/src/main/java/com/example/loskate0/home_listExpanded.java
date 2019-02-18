@@ -27,7 +27,7 @@ public class home_listExpanded extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_home_list_expanded, container, false);
         textView = v.findViewById(R.id.listText);
-        textView.setTextColor(Color.WHITE);
+        textView.setTextColor(Color.BLUE);
         Bundle b = getArguments();
         if(b != null)
         {

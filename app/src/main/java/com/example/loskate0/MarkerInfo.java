@@ -7,10 +7,12 @@ public class MarkerInfo
     // readability
 private String Latitude;
 private String Longitude;
+private String ID;
 
-    public MarkerInfo(String latitude, String longitude) {
+    public MarkerInfo(String latitude, String longitude, String _ID) {
         Latitude = latitude;
         Longitude = longitude;
+        ID = _ID;
     }
 
     public MarkerInfo(){
@@ -38,5 +40,13 @@ private String Longitude;
                 "Latitude='" + Latitude + '\'' +
                 ", Longitude='" + Longitude + '\'' +
                 '}';
+    }
+
+    public String getID() {
+        return ID;
+    }
+
+    public void setID(String ID) {
+        this.ID = ID;
     }
 }

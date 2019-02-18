@@ -219,10 +219,9 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback
     private void StoreLocationInDatabase(LatLng coords)
     {
             mDatabase = FirebaseDatabase.getInstance().getReference();
-            MarkerInfo spot = new MarkerInfo(Double.toString(coords.latitude), Double.toString(coords.longitude));
             ID = RandomStringGenerator();
+            MarkerInfo spot = new MarkerInfo(Double.toString(coords.latitude), Double.toString(coords.longitude), ID);
             mDatabase.child("spots").child(ID).setValue(spot);
-
     }
 
     // Reads the Spot locations from the database and plots their respective locations
@@ -248,8 +247,6 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback
                             .title("Saved Spot:  ")
                             .snippet(mI.getLatitude() + " " + mI.getLongitude());
                     map.addMarker(marker).setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
-
-                   // map.addMarker(new MarkerOptions().position(spotPos).title("Saved Spot:  ")).setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
                 }
             }
             @Override
