@@ -2,6 +2,8 @@ package com.example.loskate0;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -35,6 +37,9 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
 import static com.google.android.gms.maps.GoogleMap.MAP_TYPE_HYBRID;
@@ -57,6 +62,8 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback
     private DatabaseReference mDatabase;
     private String ID;
     private static final String TAG = "MyActivity"; // logging to check the values at element positions in DB
+    //
+    String snippetInfo;
 
 
     // Check our Permissions in this method
@@ -84,9 +91,6 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback
             gMap.getUiSettings().setMapToolbarEnabled(true);
            // Read from the database, and plot the spots here
             GetDatabaseContent(gMap);
-            // Testing Marker Click Stuff
-
-            // End Testing Marker Click
         }
     }
 
@@ -242,10 +246,16 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback
                     LatLng spotPos = new LatLng(Double.parseDouble(mI.getLatitude()),Double.parseDouble(mI.getLongitude()));
                     Log.d(TAG,"onDataChange: Query Method 1) found spot: " + mI.toString());
 
+                    try {
+                        snippetInfo = GetAddressFromLatLng(Double.parseDouble(mI.getLatitude()), Double.parseDouble(mI.getLongitude()));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
                     MarkerOptions marker = new MarkerOptions()
                             .position(spotPos)
-                            .title("Saved Spot:  ")
-                            .snippet(mI.getLatitude() + " " + mI.getLongitude());
+                            .title(mI.getID())
+                            .snippet(snippetInfo);
                     map.addMarker(marker).setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
                 }
             }
@@ -267,6 +277,17 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback
         String saltStr = salt.toString();
         return saltStr;
 
+    }
+
+    // Takes a latitude and longitude and returns a physical address
+    private String GetAddressFromLatLng(double Lat, double Long) throws IOException {
+        Geocoder geocoder;
+        List<Address> addresses;
+        geocoder = new Geocoder(this.getContext(), Locale.getDefault());
+        addresses = geocoder.getFromLocation(Lat, Long, 1);
+        String address = addresses.get(0).getAddressLine(0);
+
+        return address;
     }
 
 }

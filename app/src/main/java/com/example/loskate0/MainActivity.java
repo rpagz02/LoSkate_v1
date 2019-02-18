@@ -49,13 +49,13 @@ public class MainActivity extends AppCompatActivity {
 
 
     // Home Page Method
-    public void fl(String s)
+    public void fl(String title)
     {
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction ft = manager.beginTransaction();
         home_listExpanded hlf = new home_listExpanded();
         Bundle b2 = new Bundle();
-        b2.putString("s", s);
+        b2.putString("s", title);
         hlf.setArguments(b2);
         ft.replace(R.id.fragment_container, hlf);
         ft.commit();

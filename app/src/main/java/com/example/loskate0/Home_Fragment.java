@@ -48,9 +48,9 @@ public class Home_Fragment extends Fragment {
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String s = al.get(position);
-                MainActivity mnl = (MainActivity)getActivity();
-                mnl.fl(s);
+                String spotTitle = al.get(position);
+                MainActivity mainActivity = (MainActivity)getActivity();
+                mainActivity.fl(spotTitle);
             }});
         return v;
     }
