@@ -65,7 +65,7 @@ public class Home_Fragment extends Fragment
         /////
 
 
-        ////
+        /////
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

@@ -1,7 +1,10 @@
 package com.example.loskate0;
 
+import com.google.android.gms.maps.model.LatLng;
+
 public class MarkerInfo
 {
+    // readability
 private String Latitude;
 private String Longitude;
 

@@ -26,7 +26,6 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Map_Fragment()).commit();
         // This starts app with DASHBOARD FRAGMENT
         //getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new Dashboard_Fragment()).commit();
-
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener = new BottomNavigationView.OnNavigationItemSelectedListener() {

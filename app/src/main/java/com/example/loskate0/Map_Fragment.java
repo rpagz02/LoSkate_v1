@@ -3,7 +3,6 @@ package com.example.loskate0;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -22,7 +21,9 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -35,6 +36,8 @@ import com.google.firebase.database.ValueEventListener;
 
 
 import java.util.Random;
+
+import static com.google.android.gms.maps.GoogleMap.MAP_TYPE_HYBRID;
 
 public class Map_Fragment extends Fragment implements OnMapReadyCallback
 {
@@ -51,14 +54,9 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback
     ////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // *TESTING*  Database Variables                                                              //
-    private FirebaseDatabase database;
-    private DatabaseReference myRef;
     private DatabaseReference mDatabase;
     private String ID;
-    private static final String TAG = "MyActivity";
-
-
-
+    private static final String TAG = "MyActivity"; // logging to check the values at element positions in DB
 
 
     // Check our Permissions in this method
@@ -75,6 +73,7 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback
     {
         Toast.makeText(this.getContext(), "Drop A Spot!", Toast.LENGTH_SHORT).show();
         gMap = googleMap;
+        gMap.setMapType(MAP_TYPE_HYBRID); // Set the map to sat mode
         if (mLocationPermissionGranted)
         {
             GetDeviceLocation();
@@ -85,6 +84,9 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback
             gMap.getUiSettings().setMapToolbarEnabled(true);
            // Read from the database, and plot the spots here
             GetDatabaseContent(gMap);
+            // Testing Marker Click Stuff
+
+            // End Testing Marker Click
         }
     }
 
@@ -204,7 +206,7 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback
                 if (task.isSuccessful())
                 {
                     Location currentLocation = (Location) task.getResult();
-                    gMap.addMarker(new MarkerOptions().position(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude())).title("Current Spot"));
+                    gMap.addMarker(new MarkerOptions().position(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude())).title("Current Spot")).setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
                     // Store the location in the database here
                     StoreLocationInDatabase(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()));
                 } else
@@ -220,6 +222,7 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback
             MarkerInfo spot = new MarkerInfo(Double.toString(coords.latitude), Double.toString(coords.longitude));
             ID = RandomStringGenerator();
             mDatabase.child("spots").child(ID).setValue(spot);
+
     }
 
     // Reads the Spot locations from the database and plots their respective locations
@@ -239,7 +242,14 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback
                     MarkerInfo mI = singleSnapshot.getValue(MarkerInfo.class);
                     LatLng spotPos = new LatLng(Double.parseDouble(mI.getLatitude()),Double.parseDouble(mI.getLongitude()));
                     Log.d(TAG,"onDataChange: Query Method 1) found spot: " + mI.toString());
-                    map.addMarker(new MarkerOptions().position(spotPos).title("Saved Spot:  " + mI.getLatitude() + " " + mI.getLongitude()));
+
+                    MarkerOptions marker = new MarkerOptions()
+                            .position(spotPos)
+                            .title("Saved Spot:  ")
+                            .snippet(mI.getLatitude() + " " + mI.getLongitude());
+                    map.addMarker(marker).setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+
+                   // map.addMarker(new MarkerOptions().position(spotPos).title("Saved Spot:  ")).setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
                 }
             }
             @Override
