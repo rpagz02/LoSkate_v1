@@ -6,12 +6,14 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 
 
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String TAG = "MyActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,8 +50,8 @@ public class MainActivity extends AppCompatActivity {
     };
 
 
-    // Home Page Method
-    public void fl(String title)
+    // Home Page Method -> Fragment transaction from Home to Home Expanded
+    public void Frag_Trans_Home(String title)
     {
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction ft = manager.beginTransaction();
@@ -58,6 +60,28 @@ public class MainActivity extends AppCompatActivity {
         b2.putString("s", title);
         hlf.setArguments(b2);
         ft.replace(R.id.fragment_container, hlf);
+        ft.commit();
+    }
+
+    // Map Fragment Method -> Fragment transaction from Map to CreateASpot
+    public void Frag_Trans_Info(String SpotID)
+    {
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        CreateASpot cas = new CreateASpot();
+        Bundle bun2 = new Bundle();
+        bun2.putString("d", SpotID);
+        cas.setArguments(bun2);
+        ft.replace(R.id.fragment_container, cas);
+        ft.commit();
+    }
+
+    public void Frag_Trans_Map()
+    {
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        Map_Fragment cas = new Map_Fragment();
+        ft.replace(R.id.fragment_container, cas);
         ft.commit();
     }
 }

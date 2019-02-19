@@ -51,6 +51,7 @@ public class home_listExpanded extends Fragment {
         button_Address = v.findViewById(R.id.button);
         button_Address.setTextColor(Color.BLACK);
         button_Address.setText(""); // -> make the button text blank until it populates
+
         Bundle b = getArguments();
         if(b != null)
         {

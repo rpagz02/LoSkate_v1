@@ -8,6 +8,15 @@ public class MarkerInfo
 private String Latitude;
 private String Longitude;
 private String ID;
+private String Notes;
+
+    public String getNotes() {
+        return Notes;
+    }
+
+    public void setNotes(String notes) {
+        Notes = notes;
+    }
 
     public MarkerInfo(String latitude, String longitude, String _ID) {
         Latitude = latitude;

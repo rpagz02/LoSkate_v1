@@ -50,7 +50,7 @@ public class Home_Fragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String spotTitle = al.get(position);
                 MainActivity mainActivity = (MainActivity)getActivity();
-                mainActivity.fl(spotTitle);
+                mainActivity.Frag_Trans_Home(spotTitle);
             }});
         return v;
     }

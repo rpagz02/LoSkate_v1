@@ -63,7 +63,9 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback
     private String ID;
     private static final String TAG = "MyActivity"; // logging to check the values at element positions in DB
     //
-    String snippetInfo;
+    String snippetInfo; // this snippet info is for filling out the marker in dropmarker
+    String lat, lon; // these variables are passed to spot info when drop marker is called
+
 
 
     // Check our Permissions in this method
@@ -198,10 +200,10 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback
     }
 
     // Drops a Marker and Stores Markers Location in Database
-    private void DropMarker() {
+    private void DropMarker()  {
+
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this.getContext());
         if (ActivityCompat.checkSelfPermission(this.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
         }
         final Task location = mFusedLocationProviderClient.getLastLocation();
         location.addOnCompleteListener(new OnCompleteListener() {
@@ -211,12 +213,20 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback
                 {
                     Location currentLocation = (Location) task.getResult();
                     gMap.addMarker(new MarkerOptions().position(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude())).title("Current Spot")).setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+                    lat = Double.toString(currentLocation.getLatitude());
+                    lon = Double.toString(currentLocation.getLongitude());
                     // Store the location in the database here
                     StoreLocationInDatabase(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()));
+                    // Once we dropped a marker and stored it in the DB, we open our CreateASpot fragment
+                    MainActivity mainActivity = (MainActivity)getActivity();
+                    mainActivity.Frag_Trans_Info(GetSpotID()); // -> as we open the fragment, we pass the marker ID as an arguement
                 } else
                     Toast.makeText(Map_Fragment.this.getContext(), "unable to get location", Toast.LENGTH_SHORT).show();
             }
         });
+
+        // Open a new fragment that allows the user to enter information about the spot
+
     }
 
     // Method called when marker is dropped.
@@ -226,6 +236,7 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback
             ID = RandomStringGenerator();
             MarkerInfo spot = new MarkerInfo(Double.toString(coords.latitude), Double.toString(coords.longitude), ID);
             mDatabase.child("spots").child(ID).setValue(spot);
+        Log.d(TAG,"Pagnozzi: setting ID - " + this.ID);
     }
 
     // Reads the Spot locations from the database and plots their respective locations
@@ -248,6 +259,7 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback
 
                     try {
                         snippetInfo = GetAddressFromLatLng(Double.parseDouble(mI.getLatitude()), Double.parseDouble(mI.getLongitude()));
+                        snippetInfo = mI.getNotes();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -288,6 +300,12 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback
         String address = addresses.get(0).getAddressLine(0);
 
         return address;
+    }
+
+    private String GetSpotID()
+    {
+        Log.d(TAG,"Pagnozzi: returning ID - " + this.ID);
+        return this.ID;
     }
 
 }
