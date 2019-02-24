@@ -46,7 +46,6 @@ import static com.google.android.gms.maps.GoogleMap.MAP_TYPE_HYBRID;
 
 public class Map_Fragment extends Fragment implements OnMapReadyCallback
 {
-
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //                                   Variables                                                //
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -93,6 +92,18 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback
             gMap.getUiSettings().setMapToolbarEnabled(true);
            // Read from the database, and plot the spots here
             GetDatabaseContent(gMap);
+
+            // On Marker Click Stuff -> Should open the information window fragment
+            gMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                public void onInfoWindowClick(Marker marker) {
+                    Log.d(TAG,marker.getTitle() + "  Pagnozzi"); // successfully gets the spot title
+                    // Open a new fragment with this specific spots Spot information
+                    MainActivity mainActivity = (MainActivity)getActivity();
+                    mainActivity.Frag_Trans_Home(marker.getTitle());
+                }
+            });
+
+
         }
     }
 
@@ -212,7 +223,7 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback
                 if (task.isSuccessful())
                 {
                     Location currentLocation = (Location) task.getResult();
-                    gMap.addMarker(new MarkerOptions().position(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude())).title("Current Spot")).setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+                    gMap.addMarker(new MarkerOptions().position(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude())).title("Current Spot")).setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
                     lat = Double.toString(currentLocation.getLatitude());
                     lon = Double.toString(currentLocation.getLongitude());
                     // Store the location in the database here
@@ -268,7 +279,7 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback
                             .position(spotPos)
                             .title(mI.getID())
                             .snippet(snippetInfo);
-                    map.addMarker(marker).setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+                    map.addMarker(marker).setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
                 }
             }
             @Override

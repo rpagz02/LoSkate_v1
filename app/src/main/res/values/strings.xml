@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">loSkate</string>
-    <string name="title_home">Home</string>
+    <string name="title_spots">Spots</string>
     <string name="title_map">Map</string>
-    <string name="title_dashboard">Dashboard</string>
+    <string name="title_home">Home</string>
     <string name="title_activity_maps">GoogleMap</string>
 
     <!-- TODO: Remove or change this placeholder text -->

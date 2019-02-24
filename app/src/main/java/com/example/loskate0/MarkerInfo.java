@@ -1,14 +1,23 @@
 package com.example.loskate0;
 
-import com.google.android.gms.maps.model.LatLng;
+import android.graphics.Bitmap;
+
 
 public class MarkerInfo
 {
-    // readability
 private String Latitude;
 private String Longitude;
 private String ID;
 private String Notes;
+private String Picture;
+
+    public String getPicture() {
+        return Picture;
+    }
+
+    public void setPicture(String picture) {
+        Picture = picture;
+    }
 
     public String getNotes() {
         return Notes;
