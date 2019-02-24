@@ -2,8 +2,11 @@ package com.example.loskate0;
 
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
@@ -36,6 +39,7 @@ public class CreateSpot_Fragment extends Fragment {
     String m_UpdatedTitle;
     String m_UpdatedNotes;
     Bitmap m_UpdatedImage;
+    Boolean imageClicked = false;
     String ID;
     /************************************************/
     DatabaseReference mDatabase;
@@ -50,22 +54,40 @@ public class CreateSpot_Fragment extends Fragment {
 
         InitializeThePage(v);
 
-         //Submit Button On Click Method
+        //Submit Button On Click Method
         m_SubmitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 m_UpdatedTitle = m_Title.getText().toString();
                 m_UpdatedNotes = m_Notes.getText().toString();
-                UpdateDatabaseObject(ID, m_UpdatedTitle, m_UpdatedNotes, m_UpdatedImage);
-                BackToMap();
+
+                m_PictureButton.buildDrawingCache();
+                m_UpdatedImage = m_PictureButton.getDrawingCache();
+
+                Log.d("Pagnozzi", "Updated image = " + m_UpdatedImage);
+                Log.d("Pagnozzi", "imageClicked = " + imageClicked);
+
+
+                if(imageClicked == true) {
+                    UpdateDatabaseObject(ID, m_UpdatedTitle, m_UpdatedNotes, m_UpdatedImage);
+                    BackToMap();
+                }
+                else
+                {
+                    UpdateDatabaseObject(ID, m_UpdatedTitle, m_UpdatedNotes, null);
+                    BackToMap();
+                }
+
             }
         });
+
         // Image Button On Click Method
         m_PictureButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 startActivityForResult(intent,0);
+                imageClicked = true;
             }
         });
 
@@ -78,7 +100,7 @@ public class CreateSpot_Fragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         Bitmap bitmap = (Bitmap)data.getExtras().get("data");
         m_UpdatedImage = bitmap;
-        m_PictureButton.setImageBitmap(bitmap);
+        m_PictureButton.setImageBitmap(m_UpdatedImage);
     }
 
     private void InitializeThePage(View v)
@@ -92,10 +114,11 @@ public class CreateSpot_Fragment extends Fragment {
         m_Notes.setTextColor(Color.argb(255,255,165,0));
         m_Notes.setText("Enter Notes...");
 
-        m_PictureButton = v.findViewById(R.id.Edit_Image);
-
         m_SubmitButton = v.findViewById(R.id.Submit_Button);
         m_SubmitButton.setTextColor(Color.WHITE);
+
+
+        m_PictureButton = v.findViewById(R.id.Edit_Image);
 
 
         Bundle bun = getArguments();
@@ -110,10 +133,18 @@ public class CreateSpot_Fragment extends Fragment {
 
     private void UpdateDatabaseObject(String id, String title, String notes, Bitmap image)
     {
+
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mDatabase.child("spots").child(id).child("id").setValue(title);
         mDatabase.child("spots").child(id).child("notes").setValue(notes);
-        mDatabase.child("spots").child(id).child("image").setValue(EncodeBitmap(image));
+        if(image!=null) {
+            String bmString; // bitmap String
+            bmString = EncodeBitmap(image, Bitmap.CompressFormat.JPEG, 100);
+            mDatabase.child("spots").child(id).child("image").setValue(bmString);
+        }
+        else
+            mDatabase.child("spots").child(id).child("image").setValue(null);
+
     }
 
     private void BackToMap()
@@ -122,10 +153,10 @@ public class CreateSpot_Fragment extends Fragment {
         mainActivity.Frag_Trans_Map();
     }
 
-    public String  EncodeBitmap(Bitmap bitmap) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-        String imageEncoded = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
-        return imageEncoded;
+    public String EncodeBitmap(Bitmap image, Bitmap.CompressFormat compressFormat, int quality)
+    {
+        ByteArrayOutputStream byteArrayOS = new ByteArrayOutputStream();
+        image.compress(compressFormat, quality, byteArrayOS);
+        return Base64.encodeToString(byteArrayOS.toByteArray(), Base64.DEFAULT);
     }
 }

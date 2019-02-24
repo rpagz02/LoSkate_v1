@@ -245,7 +245,7 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback
     {
             mDatabase = FirebaseDatabase.getInstance().getReference();
             ID = RandomStringGenerator();
-            MarkerInfo spot = new MarkerInfo(Double.toString(coords.latitude), Double.toString(coords.longitude), ID);
+            MarkerInfo spot = new MarkerInfo(Double.toString(coords.latitude), Double.toString(coords.longitude), ID, null, null);
             mDatabase.child("spots").child(ID).setValue(spot);
         Log.d(TAG,"Pagnozzi: setting ID - " + this.ID);
     }

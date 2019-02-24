@@ -30,7 +30,7 @@
         android:layout_marginRight="8dp"
         android:adjustViewBounds="true"
         android:scaleType="fitXY"
-        android:src="@drawable/common_google_signin_btn_icon_dark_normal_background"
+        android:src="@drawable/missingphoto"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

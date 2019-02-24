@@ -2,25 +2,22 @@
 
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryDark"
     android:orientation="vertical">
 
 
-
     <ListView
         android:id="@+id/listview1"
         android:layout_width="match_parent"
-        android:layout_height="554dp"
+        android:layout_height="match_parent"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_marginStart="0dp"
         android:layout_marginLeft="0dp"
-        android:layout_marginTop="49dp"
+        android:layout_marginTop="0dp"
         android:background="@android:color/transparent"
         android:dividerHeight="10dp" />
 </RelativeLayout>

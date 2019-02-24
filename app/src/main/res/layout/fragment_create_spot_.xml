@@ -30,7 +30,7 @@
         android:layout_marginRight="8dp"
         android:adjustViewBounds="true"
         android:scaleType="fitXY"
-        android:src="@drawable/common_google_signin_btn_icon_dark_normal_background"
+        android:src="@drawable/addphoto_ic"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -105,7 +105,7 @@
         android:layout_marginTop="355dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:text="Notes..."
+        android:text="..."
         android:textColor="@color/colorAccent"
         android:textSize="18sp"
         app:fontFamily="@font/architects_daughter"

@@ -9,14 +9,15 @@ private String Latitude;
 private String Longitude;
 private String ID;
 private String Notes;
-private String Picture;
+private String Image;
 
-    public String getPicture() {
-        return Picture;
+
+    public String getImage() {
+        return Image;
     }
 
-    public void setPicture(String picture) {
-        Picture = picture;
+    public void setImage(String image) {
+        Image = image;
     }
 
     public String getNotes() {
@@ -27,10 +28,12 @@ private String Picture;
         Notes = notes;
     }
 
-    public MarkerInfo(String latitude, String longitude, String _ID) {
+    public MarkerInfo(String latitude, String longitude, String _ID, String _Image, String _Notes) {
         Latitude = latitude;
         Longitude = longitude;
         ID = _ID;
+        Image = _Image;
+        Notes = _Notes;
     }
 
     public MarkerInfo(){

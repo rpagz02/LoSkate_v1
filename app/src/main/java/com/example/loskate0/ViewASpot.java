@@ -49,7 +49,6 @@ public class ViewASpot extends Fragment {
         textView_Title = v.findViewById(R.id.View_Spot);
         textView_Notes = v.findViewById(R.id.View_Notes);
         imageView_Picture = v.findViewById(R.id.View_Image);
-
         Bundle b = getArguments();
         if(b != null)
         {
@@ -57,6 +56,7 @@ public class ViewASpot extends Fragment {
             QueryDatabaseForSpot(title);
             textView_Title.setText(tempTitle);
             textView_Notes.setText(tempNotes);
+            if(tempImage != null)
             imageView_Picture.setImageBitmap(tempImage);
         }
         return v;
@@ -75,31 +75,34 @@ public class ViewASpot extends Fragment {
                 for(DataSnapshot singleSnapshot : dataSnapshot.getChildren())
                 {
                     MarkerInfo mI = singleSnapshot.getValue(MarkerInfo.class);
-                    if(mI.getID().equals(spotTitle)) {
+                    if(mI.getID().equals(spotTitle))
+                    {
                             tempTitle = mI.getID();
                             tempNotes = mI.getNotes();
-                            tempImage = null;
-                            imageView_Picture.setImageBitmap(tempImage);
+                        if(mI.getImage()!= null) tempImage = DecodeBitmap(mI.getImage());
 
                         if(tempTitle!=null) {
                             textView_Title.setText(tempTitle);
                             textView_Title.setTextColor(Color.argb(255,255,165,0));
-                        }
-                            else {
+                        } else {
                                 tempTitle = "No Title Listed";
                             textView_Title.setTextColor(Color.argb(255,255,165,0));
-                            textView_Title.setText(tempTitle);
-                            }
-                            if(tempNotes!=null) {
-                                textView_Notes.setText(tempNotes);
-                                textView_Notes.setTextColor(Color.argb(255,255,165,0));
-                            }
-                            else{
-                                tempNotes = "No Notes Listed";
-                                textView_Notes.setTextColor(Color.argb(255,255,165,0));
-                                textView_Notes.setText(tempNotes);
+                            textView_Title.setText(tempTitle); }
 
+                            if(tempImage!=null) {
+                                imageView_Picture.setImageBitmap(tempImage);
                             }
+
+                        if(tempNotes!=null) {
+                            textView_Notes.setText(tempNotes);
+                            textView_Notes.setTextColor(Color.argb(255,255,165,0));
+                        }
+                        else{
+                            tempNotes = "No Notes Listed";
+                            textView_Notes.setTextColor(Color.argb(255,255,165,0));
+                            textView_Notes.setText(tempNotes);
+
+                        }
 
                             return; }
                     else {
@@ -112,6 +115,12 @@ public class ViewASpot extends Fragment {
         });
     }
 
+
+    public static Bitmap DecodeBitmap(String input)
+    {
+        byte[] decodedBytes = Base64.decode(input, 0);
+        return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
+    }
 
     private String GetAddressFromLatLng(double Lat, double Long) throws IOException {
         Geocoder geocoder;
