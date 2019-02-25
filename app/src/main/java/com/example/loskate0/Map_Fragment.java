@@ -2,6 +2,8 @@ package com.example.loskate0;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -64,6 +66,9 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback
     //
     String snippetInfo; // this snippet info is for filling out the marker in dropmarker
     String lat, lon; // these variables are passed to spot info when drop marker is called
+    private Bitmap bitmap;
+    private Bitmap customMarkerImage;
+
 
 
 
@@ -73,6 +78,8 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback
     {
         super.onCreate(savedInstanceState);
         GetLocationPermission();
+        bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.spotmarker);
+        customMarkerImage = Bitmap.createScaledBitmap(bitmap, 150, 200, false);
     }
 
     // Method called every time the map is ready
@@ -96,7 +103,6 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback
             // On Marker Click Stuff -> Should open the information window fragment
             gMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
                 public void onInfoWindowClick(Marker marker) {
-                    Log.d(TAG,marker.getTitle() + "  Pagnozzi"); // successfully gets the spot title
                     // Open a new fragment with this specific spots Spot information
                     MainActivity mainActivity = (MainActivity)getActivity();
                     mainActivity.Frag_Trans_Home(marker.getTitle());
@@ -279,7 +285,9 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback
                             .position(spotPos)
                             .title(mI.getID())
                             .snippet(snippetInfo);
+//                            .icon(BitmapDescriptorFactory.fromBitmap(customMarkerImage));
                     map.addMarker(marker).setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+                    //map.addMarker(marker);
                 }
             }
             @Override

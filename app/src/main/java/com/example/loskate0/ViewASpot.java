@@ -32,14 +32,16 @@ import java.util.Locale;
 
 
 public class ViewASpot extends Fragment {
-
+    //////////////////////////////////////////////////////
+    //                 Variables                        //
+    //////////////////////////////////////////////////////
     TextView textView_Title;
     TextView textView_Notes;
     ImageView imageView_Picture;
     String tempTitle, tempNotes;
     Bitmap tempImage;
     private static final String TAG = "MyActivity";
-
+    //////////////////////////////////////////////////////
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

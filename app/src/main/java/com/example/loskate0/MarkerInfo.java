@@ -7,9 +7,9 @@ public class MarkerInfo
 {
 private String Latitude;
 private String Longitude;
-private String ID;
-private String Notes;
-private String Image;
+private String ID; // spot title
+private String Notes; // description of the spot
+private String Image; // user taken picture of the spot @ the spot
 
 
     public String getImage() {
