@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -43,6 +44,7 @@ public class CreateSpot_Fragment extends Fragment {
     String ID;
     /************************************************/
     DatabaseReference mDatabase;
+    FirebaseAuth mAuth;
 
 
     @Override
@@ -134,17 +136,30 @@ public class CreateSpot_Fragment extends Fragment {
     private void UpdateDatabaseObject(String id, String title, String notes, Bitmap image)
     {
 
+        mAuth = FirebaseAuth.getInstance();
+        String userID = mAuth.getCurrentUser().getUid();
         mDatabase = FirebaseDatabase.getInstance().getReference();
+
         mDatabase.child("spots").child(id).child("id").setValue(title);
         mDatabase.child("spots").child(id).child("notes").setValue(notes);
+        // New Way
+        mDatabase.child("Users").child(userID).child(id).child("id").setValue(title);
+        mDatabase.child("Users").child(userID).child(id).child("notes").setValue(notes);
+
+
         if(image!=null) {
             String bmString; // bitmap String
             bmString = EncodeBitmap(image, Bitmap.CompressFormat.JPEG, 100);
             mDatabase.child("spots").child(id).child("image").setValue(bmString);
-        }
-        else
-            mDatabase.child("spots").child(id).child("image").setValue(null);
+            // New Way
+            mDatabase.child("Users").child(userID).child(id).child("image").setValue(bmString);
 
+        }
+        else {
+             mDatabase.child("spots").child(id).child("image").setValue(null);
+            // New Way
+            mDatabase.child("Users").child(userID).child(id).child("image").setValue(null);
+        }
     }
 
     private void BackToMap()

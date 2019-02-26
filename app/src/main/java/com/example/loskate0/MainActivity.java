@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
             switch (item.getItemId())
             {
                 case R.id.navigation_home:
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Home_Fragment()).commit();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Login_Fragment()).commit();
                     break;
                 case R.id.navigation_map:
                         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Map_Fragment()).commit();
@@ -79,6 +79,15 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction ft = fm.beginTransaction();
         Map_Fragment cas = new Map_Fragment();
         ft.replace(R.id.fragment_container, cas);
+        ft.commit();
+    }
+
+    public void Frag_Trans_Profile()
+    {
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        Profile_Fragment pro = new Profile_Fragment();
+        ft.replace(R.id.fragment_container, pro);
         ft.commit();
     }
 

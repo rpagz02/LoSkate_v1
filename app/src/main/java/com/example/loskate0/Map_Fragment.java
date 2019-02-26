@@ -31,6 +31,8 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -61,13 +63,16 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // *TESTING*  Database Variables                                                              //
     private DatabaseReference mDatabase;
-    private String ID;
+    private String Spot_ID;
     private static final String TAG = "MyActivity"; // logging to check the values at element positions in DB
     //
     String snippetInfo; // this snippet info is for filling out the marker in dropmarker
     String lat, lon; // these variables are passed to spot info when drop marker is called
     private Bitmap bitmap;
     private Bitmap customMarkerImage;
+    // Firebase Auth Stuff *testing*
+    FirebaseAuth mAuth;
+    String userID;
 
 
 
@@ -249,11 +254,14 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback
     // Method called when marker is dropped.
     private void StoreLocationInDatabase(LatLng coords)
     {
+            mAuth = FirebaseAuth.getInstance();
             mDatabase = FirebaseDatabase.getInstance().getReference();
-            ID = RandomStringGenerator();
-            MarkerInfo spot = new MarkerInfo(Double.toString(coords.latitude), Double.toString(coords.longitude), ID, null, null);
-            mDatabase.child("spots").child(ID).setValue(spot);
-        Log.d(TAG,"Pagnozzi: setting ID - " + this.ID);
+            userID = mAuth.getCurrentUser().getUid();
+            Spot_ID = RandomStringGenerator();
+            MarkerInfo spot = new MarkerInfo(Double.toString(coords.latitude), Double.toString(coords.longitude), Spot_ID, null, null);
+            mDatabase.child("spots").child(Spot_ID).setValue(spot);
+            mDatabase.child("Users").child(userID).child(Spot_ID).setValue(spot);
+        Log.d(TAG,"Pagnozzi: setting ID - " + this.Spot_ID);
     }
 
     // Reads the Spot locations from the database and plots their respective locations
@@ -323,8 +331,8 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback
 
     private String GetSpotID()
     {
-        Log.d(TAG,"Pagnozzi: returning ID - " + this.ID);
-        return this.ID;
+        Log.d(TAG,"Pagnozzi: returning ID - " + this.Spot_ID);
+        return this.Spot_ID;
     }
 
 }
