@@ -30,10 +30,9 @@
         android:gravity="center_horizontal"
         android:text="My Spots" />
 
-    <ListView
-        android:id="@+id/listview2"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycleView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="50dp" />
+        android:layout_height="match_parent" />
 
 </LinearLayout>

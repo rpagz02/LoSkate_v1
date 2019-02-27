@@ -1,10 +1,11 @@
 package com.example.loskate0;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +23,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class Profile_Fragment extends Fragment {
@@ -36,26 +38,38 @@ public class Profile_Fragment extends Fragment {
     private TextView text;
     FirebaseAuth mAuth;
 //////////////////////////////////////////////////////////
+private DatabaseReference ref;
+private List<MarkerInfo> mSpots;
+private RecyclerView recyclerView;
+private RecyclerViewAdapter mAdapter;
+
+//////////////////////////////////////////////////////////
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_profile_, container, false);
 
+        recyclerView = v.findViewById(R.id.recycleView);
+        mSpots = new ArrayList<>();
+        recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        mAdapter = new RecyclerViewAdapter(mSpots);
+        recyclerView.setAdapter(mAdapter);
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        ref = database.getReference("Users");
+        // Above this line is all RV stuff ^
+
+        // Below this line is all LV stuff
         mAuth = FirebaseAuth.getInstance();
         text = v.findViewById(R.id.user);
         text.setText(mAuth.getCurrentUser().getEmail());
-        //
 
-        lv = v.findViewById(R.id.listview2);
-        al = new ArrayList<>();
-        PopulateListFromDataBase();
-
+        PopulateRecyclerFromDataBase();
 
 
         return v;
     }
 
-
-    private void PopulateListFromDataBase()
+    private void PopulateRecyclerFromDataBase()
     {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
         Log.d(TAG,"Pagnozzi- ID = " + mAuth.getCurrentUser().getUid());
@@ -67,31 +81,18 @@ public class Profile_Fragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot)
             {
-                al.clear();
                 for(DataSnapshot singleSnapshot : dataSnapshot.getChildren())
                 {
                     MarkerInfo mI = singleSnapshot.getValue(MarkerInfo.class);
-                    String listItem = mI.getID();
-                    Log.d(TAG,"Pagnozzi- ID = " + mI.getID());
-                    al.add(listItem);
+                    //
+                    mSpots.add(mI);
+                    recyclerView.scrollToPosition(mSpots.size() - 1);
+                    mAdapter.notifyItemInserted(mSpots.size() - 1);
                 }
-                aa = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, al)
-                {
-                    @Nullable
-                    @Override
-                    public View getView(int position, View convertView, ViewGroup parent)
-                    {
-                        TextView listItem = (TextView)super.getView(position,convertView,parent);
-                        listItem.setTextColor(Color.BLACK);
-                        return listItem;
-                    }
-                };
-                lv.setAdapter(aa);
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) { }
         });
     }
-
 
 }
