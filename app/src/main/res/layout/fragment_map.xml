@@ -22,7 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|left"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="40dp"
             android:background="@mipmap/dropmarkerforeground"
             android:padding="10dp"
             android:paddingRight="0dp"
@@ -30,7 +30,20 @@
             android:textAllCaps="false"
             android:textColor="@android:color/white" />
 
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|left"
+            android:layout_marginBottom="30dp"
+            android:padding="10dp"
+            android:textAllCaps="false"
+            android:textColor="@android:color/holo_orange_dark"
+            android:text="Drop A Spot!" />
+
     </fragment>
+
+
 
 
 </FrameLayout>

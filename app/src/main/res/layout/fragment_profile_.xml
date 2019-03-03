@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Profile_Fragment"
-    android:orientation="vertical">
+    android:background="@color/colorPrimaryDark"
+    android:orientation="vertical"
+    tools:context=".Profile_Fragment">
 
 
     <TextView
@@ -12,27 +14,30 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
+        android:gravity="center_horizontal"
         android:inputType="textPersonName"
         android:padding="10dp"
-        android:text="Name" />
+        android:text="Name"
+        android:textColor="@color/colorPrimary"
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/status"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:text="TextView" />
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:text="My Spots" />
+        android:padding="10dp"
+        android:text="My Spots"
+        android:textColor="@android:color/white"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:fontFamily="@font/architects_daughter" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycleView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:padding="10dp"
+        android:scrollbars="vertical" />
 
 </LinearLayout>

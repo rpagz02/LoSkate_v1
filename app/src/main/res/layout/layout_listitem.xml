@@ -3,24 +3,43 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/recycler_relative_layout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="100dp"
+    android:background="@drawable/border"
     android:padding="10dp">
 
 
     <android.support.v7.widget.AppCompatImageView
         android:id="@+id/image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:background="@android:drawable/screen_background_light_transparent"
+        android:drawingCacheQuality="high"
+        android:scaleType="centerCrop"
         android:src="@mipmap/ic_launcher" />
 
     <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+        android:layout_alignTop="@+id/image"
+        android:layout_centerHorizontal="true"
         android:text="TextView"
+        android:textColor="@color/colorPrimary"
         android:textSize="18sp"
-        app:fontFamily="@font/architects_daughter" />
+        android:textStyle="bold"
+        app:fontFamily="sans-serif" />
+
+    <TextView
+        android:id="@+id/notes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/image"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="31dp"
+        android:text="TextView"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="12sp"
+        app:fontFamily="sans-serif" />
 
 
 </RelativeLayout>
